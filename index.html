@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>برنامج الصف الأول الابتدائي 1447هـ</title>
+<meta name="description" content="واجهة برنامج متابعة طلاب الصف الأول الابتدائي 1447هـ">
+
+<!-- ✅ أمان: سياسة محتوى لتقييد المصادر على https/self فقط -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'">
+
+<style>
+  :root{
+    /* 🎨 هوية خضراء */
+    --primary:#1e7d32; --primary-2:#66bb6a; --bg:#f5fff5; --card:#ffffff;
+    --ok:#1e7d32; --warn:#f9a825; --danger:#d32f2f; --muted:#64748b;
+    --shadow:0 10px 22px rgba(0,0,0,.08); --radius:18px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#0f172a;font-family:'Tajawal',Arial,sans-serif}
+  header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--primary),var(--primary-2));color:#fff;padding:14px 16px;box-shadow:var(--shadow)}
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .brand{display:flex;gap:10px;align-items:center}
+  .logo{width:44px;height:44px;border-radius:50%;background:#fff;color:var(--primary);display:grid;place-items:center;font-weight:900}
+  nav a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:700;opacity:.95}
+  nav a:hover{background:rgba(255,255,255,.18)}
+  main{max-width:1100px;margin:18px auto;padding:0 14px;display:grid;gap:18px}
+  .grid{display:grid;gap:18px}
+  @media (min-width:900px){.grid{grid-template-columns:1.15fr 1fr}}
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+  .card h3{margin:0 0 10px;font-size:1.12rem}
+  .muted{color:var(--muted);font-size:.92rem}
+  .btn{border:none;background:#eef7ee;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:800;box-shadow:var(--shadow)}
+  .btn.primary{background:linear-gradient(180deg,#2e7d32,#66bb6a);color:#fff}
+  .btn.ghost{background:#fff}
+  .btn.ok{background:linear-gradient(180deg,#2e7d32,#81c784);color:#fff}
+  .btn.warn{background:linear-gradient(180deg,#f9a825,#ffd54f)}
+  .btn.danger{background:linear-gradient(180deg,#d32f2f,#ef5350);color:#fff}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .pill{background:#e8f5e9;color:#14532d;padding:4px 10px;border-radius:999px;font-size:.85rem}
+  .alert{display:none;border-radius:12px;padding:10px;font-size:.92rem}
+  .alert.show{display:block}
+  .alert.error{background:#fdecea;color:#b71c1c;border:1px solid #ffcdd2}
+  .alert.ok{background:#e8f5e9;color:#1b5e20;border:1px solid #c8e6c9}
+  .footer{text-align:center;color:#9aa4b2;padding:16px}
+
+  /* لوحة الطالب */
+  .student{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center}
+  .avatar{width:96px;height:96px;border-radius:16px;overflow:hidden;border:3px solid #e6ffe6;background:#fff}
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .progress{height:10px;background:#e6f5e6;border-radius:999px;overflow:hidden}
+  .progress>span{display:block;height:100%;background:linear-gradient(90deg,#2e7d32,#a5d6a7)}
+
+  /* الجدول */
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:10px;border-bottom:1px solid #e8f5e9;text-align:center}
+  thead th{background:#f0fbf0}
+  .slot{display:grid;gap:6px}
+  .slot input,.slot select,.slot textarea{width:100%;padding:8px;border:1px solid #d6ead9;border-radius:10px}
+  .slot textarea{min-height:60px;resize:vertical}
+
+  /* البطاقات المصغّرة */
+  .activities{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .tile{border:1px solid #e5f6e5;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:grid;grid-template-rows:140px 1fr;min-height:220px;background:#fff}
+  .tile .ph{display:grid;place-items:center;color:#7a8b7c;background:#f6fff6}
+  .tile img{width:100%;height:140px;object-fit:cover}
+  .tile .body{padding:10px;display:grid;gap:6px}
+  .meta{font-size:.8rem;color:#587261;display:flex;justify-content:space-between}
+
+  /* المهارات */
+  .skills{display:grid;gap:8px}
+  .skill{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:8px 10px;border:1px dashed #cfead3;border-radius:12px;background:#fcfffc}
+
+  /* التقرير */
+  .report pre{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;padding:12px;border-radius:12px;overflow:auto}
+
+  /* طباعة */
+  @media print{
+    header, nav, #exportBtn, #importFile, #printBtn { display:none !important; }
+    .card{box-shadow:none; border:1px solid #ddd}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+<header aria-label="شريط علوي">
+  <div class="row" style="justify-content:space-between">
+    <div class="brand" aria-label="هوية البرنامج">
+      <div class="logo" aria-hidden="true">أ</div>
+      <div>
+        <div style="font-weight:900">برنامج الصف الأول 1447هـ</div>
+        <div class="muted" id="todayLine">…</div>
+      </div>
+    </div>
+    <nav class="row" aria-label="التنقل">
+      <a href="#student">الطالب</a>
+      <a href="#timetable">الجدول</a>
+      <a href="#skills">المهارات</a>
+      <a href="#assignments">الواجبات</a>
+      <a href="#behavior">السلوك & المكافآت</a>
+      <a href="#report">التقرير</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ========== لوحة الطالب ========== -->
+  <section id="student" class="card" aria-labelledby="student-title">
+    <h3 id="student-title">لوحة الطالب</h3>
+    <div class="alert error" id="errBox" role="alert"></div>
+    <div class="student">
+      <div class="avatar"><img id="avatar" alt="صورة الطالب" src="https://i.imgur.com/2yaf2wb.png"></div>
+      <div>
+        <div class="row" style="gap:8px">
+          <input id="studentName" placeholder="اسم الطالب" aria-label="اسم الطالب" autocomplete="off" minlength="2" style="padding:10px;border:1px solid #d6ead9;border-radius:12px;min-width:220px">
+          <input id="studentImg" placeholder="رابط صورة الطالب (HTTPS فقط)" aria-label="رابط الصورة" inputmode="url" style="padding:10px;border:1px solid #d6ead9;border-radius:12px;min-width:280px">
+          <button class="btn primary" id="saveStudent">حفظ</button>
+          <span class="pill" id="saveOk" style="display:none">✅ تم الحفظ</span>
+        </div>
+        <div class="row" style="justify-content:space-between;margin-top:8px">
+          <span class="muted">نسبة إتقان المهارات</span>
+          <span class="pill"><b id="skillPct">0</b>%</span>
+        </div>
+        <div class="progress" aria-label="شريط التقدم"><span id="progressBar" style="width:0%"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== الجدول الأسبوعي ========== -->
+  <section id="timetable" class="card">
+    <h3>الجدول الأسبوعي (الأحد–الخميس)</h3>
+    <div class="muted" style="margin-bottom:8px">أدخل اسم الحصة وملاحظات قصيرة لكل يوم. يُحفظ تلقائيًا.</div>
+    <div class="grid">
+      <div class="card" style="padding:0">
+        <table id="table">
+          <thead><tr>
+            <th>اليوم</th>
+            <th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>الحصة 4</th><th>الحصة 5</th>
+          </tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="card" aria-label="ملاحظات اليوم">
+        <h3>ملاحظات اليوم</h3>
+        <div class="slot">
+          <label for="daySelect" class="muted">اختر اليوم</label>
+          <select id="daySelect" aria-label="اليوم">
+            <option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option>
+          </select>
+          <label for="dayNotes" class="muted">الملاحظات</label>
+          <textarea id="dayNotes" placeholder="سلوك/إنجاز/تنبيه ولي الأمر…"></textarea>
+          <div class="row">
+            <button class="btn primary" id="saveNotes">حفظ الملاحظات</button>
+            <button class="btn ghost" id="clearNotes">مسح</button>
+          </div>
+          <div class="alert ok" id="notesOk" role="status">تم حفظ الملاحظات ✅</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== المهارات ========== -->
+  <section id="skills" class="card">
+    <h3>جدول المهارات الأساسية</h3>
+    <div class="skills" id="skillsList"></div>
+  </section>
+
+  <!-- ========== الواجبات ========== -->
+  <section id="assignments" class="card">
+    <h3>الواجبات والأنشطة البيتية</h3>
+    <form id="assignForm" class="slot" novalidate>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <input id="asgTitle" placeholder="عنوان الواجب (مثال: قراءة الصفحة 12)" required minlength="3" style="flex:2;min-width:260px">
+        <input id="asgDue" type="date" style="flex:1;min-width:180px">
+        <input id="asgLink" placeholder="رابط توضيحي (HTTPS فقط)" inputmode="url">
+        <button class="btn primary" type="submit">إضافة</button>
+        <button class="btn ghost" id="clearAsg" type="button">حذف الكل</button>
+      </div>
+      <div class="alert error" id="asgErr" role="alert"></div>
+    </form>
+    <div class="activities" id="asgList" aria-live="polite"></div>
+  </section>
+
+  <!-- ========== السلوك والنقاط ========== -->
+  <section id="behavior" class="card">
+    <h3>السلوك والمكافآت</h3>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <div class="muted">رصيد النقاط</div>
+        <div style="font-size:2rem;font-weight:900;color:var(--ok)" id="points">0</div>
+      </div>
+      <div class="row">
+        <button class="btn ok" id="pPlus5">+5</button>
+        <button class="btn ok" id="pPlus1">+1</button>
+        <button class="btn warn" id="pMinus1">-1</button>
+        <button class="btn danger" id="pReset">تصفير</button>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
+      <select id="rewardSel">
+        <option value="">اختر مكافأة للاستبدال</option>
+        <option value="ملصق ذهبي|5">ملصق ذهبي (5)</option>
+        <option value="وسام المشاركة|10">وسام المشاركة (10)</option>
+        <option value="شهادة نجم الصف|15">شهادة نجم الصف (15)</option>
+      </select>
+      <button class="btn primary" id="redeemBtn">استبدال</button>
+      <span class="pill" id="lastRedeem">لا يوجد</span>
+    </div>
+  </section>
+
+  <!-- ========== التقارير والنسخ الاحتياطي ========== -->
+  <section id="report" class="card">
+    <h3>التقارير والطباعة</h3>
+    <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <input id="reportMonth" placeholder="الشهر (مثال: محرم 1447هـ)">
+      <button class="btn primary" id="genReport">توليد التقرير</button>
+      <button class="btn ghost" id="printBtn">طباعة</button>
+      <button class="btn" id="exportBtn" title="نسخ احتياطي">تصدير JSON</button>
+      <label class="btn" for="importFile" style="cursor:pointer">استيراد JSON</label>
+      <input id="importFile" type="file" accept="application/json" style="display:none">
+      <button class="btn danger" id="factoryReset" title="حذف كل البيانات">إعادة ضبط شاملة</button>
+    </div>
+    <pre id="reportOut"></pre>
+    <div class="alert ok" id="impOk" role="status">تم الاستيراد بنجاح 👍</div>
+    <div class="alert error" id="impErr" role="alert">تعذر الاستيراد—تأكد من صحة الملف.</div>
+  </section>
+
+  <div class="footer">© برنامج الصف الأول الابتدائي 1447هـ — جميع الحقوق محفوظة</div>
+</main>
+
+<script>
+/* ==========================================================
+   ✅ أمان/أداء:
+   - escapeHTML لمنع XSS
+   - safeURL يقبل HTTPS فقط
+   - فحص JSON عند الاستيراد
+   - حفظ/تحميل سريع عبر localStorage
+   ========================================================== */
+
+/* ======= ثوابت وبيانات افتراضية ======= */
+const DAYS = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
+const DEFAULT_SKILLS = [
+  {id:'read-letters',  title:'تعرف الحروف الهجائية', area:'القراءة'},
+  {id:'read-words3',   title:'قراءة كلمات ثلاثية', area:'القراءة'},
+  {id:'write-letters', title:'كتابة الحروف بشكل صحيح', area:'الكتابة'},
+  {id:'write-name',    title:'كتابة الاسم كاملًا', area:'الكتابة'},
+  {id:'count-20',      title:'عدّ الأرقام حتى 20', area:'الرياضيات'},
+  {id:'add-10',        title:'جمع حتى 10', area:'الرياضيات'},
+  {id:'behavior',      title:'سلوك إيجابي داخل الصف', area:'السلوك'},
+  {id:'team',          title:'مشاركة في نشاط جماعي', area:'المهارات الاجتماعية'},
+];
+const LS = { student:'g1_student', skills:'g1_skills', table:'g1_table', notes:'g1_notes', asg:'g1_assign', points:'g1_points' };
+
+/* ======= أدوات مساعدة ======= */
+const $=q=>document.querySelector(q);
+const fmtDate = d => new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium',timeStyle:'short'}).format(d);
+const fmtHijri = d => {
+  try{ return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{dateStyle:'full'}).format(d); }
+  catch(_){ return 'التقويم الهجري غير مدعوم في هذا المتصفح'; }
+};
+const escapeHTML = (s='')=> s.replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const uuidv4 = ()=> (crypto.randomUUID ? crypto.randomUUID() : ('id-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)));
+const safeURL = (u)=>{
+  try{
+    if(!u) return '';
+    const url = new URL(u);
+    // 🔒 قبول HTTPS فقط
+    if(url.protocol === 'https:') return url.href;
+  }catch(_){}
+  return '';
+};
+
+/* ======= الحالة العامة ======= */
+let state = {
+  student:{name:'',img:''},
+  skills:{},  // id -> bool
+  table:{},   // day -> [5]
+  notes:{},   // day -> text
+  asg:[],     // {id,title,due,link,at,done}
+  points:0
+};
+
+/* ======= تحميل/حفظ ======= */
+function loadAll(){
+  try{
+    state.student = JSON.parse(localStorage.getItem(LS.student)||'{}');
+    state.skills  = JSON.parse(localStorage.getItem(LS.skills)||'{}') || {};
+    state.table   = JSON.parse(localStorage.getItem(LS.table) || '{}') || {};
+    state.notes   = JSON.parse(localStorage.getItem(LS.notes) || '{}') || {};
+    state.asg     = JSON.parse(localStorage.getItem(LS.asg)   || '[]') || [];
+    const p       = JSON.parse(localStorage.getItem(LS.points)||'0');
+    state.points  = Number.isFinite(p)?p:0;
+  }catch(e){ console.error('load',e); }
+}
+function persist(){
+  localStorage.setItem(LS.student, JSON.stringify(state.student));
+  localStorage.setItem(LS.skills , JSON.stringify(state.skills));
+  localStorage.setItem(LS.table  , JSON.stringify(state.table));
+  localStorage.setItem(LS.notes  , JSON.stringify(state.notes));
+  localStorage.setItem(LS.asg    , JSON.stringify(state.asg));
+  localStorage.setItem(LS.points , JSON.stringify(state.points));
+}
+
+/* ======= التاريخ الهجري/الميلادي ======= */
+(function renderToday(){
+  const now = new Date();
+  $('#todayLine').textContent = `${fmtHijri(now)} — ${fmtDate(now)}`;
+})();
+
+/* ======= لوحة الطالب ======= */
+function renderStudent(){
+  $('#studentName').value = state.student.name || '';
+  $('#studentImg').value  = state.student.img || '';
+  $('#avatar').src        = state.student.img ? safeURL(state.student.img) : 'https://i.imgur.com/2yaf2wb.png';
+  updateSkillProgress();
+}
+$('#saveStudent').addEventListener('click', ()=>{
+  const name = $('#studentName').value.trim();
+  const img  = $('#studentImg').value.trim();
+  const err  = $('#errBox'); err.classList.remove('show'); err.textContent='';
+  if(name.length<2){ err.textContent='⚠️ أدخل اسمًا صحيحًا (حرفان على الأقل).'; err.classList.add('show'); return; }
+  if(img && !safeURL(img)){ err.textContent='⚠️ رابط الصورة يجب أن يكون HTTPS صالحًا.'; err.classList.add('show'); return; }
+  state.student = {name, img:safeURL(img)};
+  persist(); $('#saveOk').style.display='inline-block';
+  setTimeout(()=> $('#saveOk').style.display='none', 1400);
+});
+
+/* ======= الجدول الأسبوعي ======= */
+function renderTable(){
+  const tb = $('#tableBody'); tb.innerHTML='';
+  DAYS.forEach(day=>{
+    const tr = document.createElement('tr');
+    const th = document.createElement('th'); th.textContent = day; tr.appendChild(th);
+    for(let i=0;i<5;i++){
+      const td = document.createElement('td');
+      const inp = document.createElement('input');
+      inp.setAttribute('aria-label', `حصة ${i+1} يوم ${day}`);
+      inp.value = (state.table[day]?.[i]) || '';
+      inp.maxLength = 40;
+      inp.addEventListener('input', ()=>{
+        if(!state.table[day]) state.table[day]=Array(5).fill('');
+        state.table[day][i] = inp.value;
+        persist();
+      });
+      td.appendChild(inp); tr.appendChild(td);
+    }
+    tb.appendChild(tr);
+  });
+}
+/* ملاحظات اليوم */
+function renderNotesUI(){ $('#dayNotes').value = state.notes[$('#daySelect').value] || ''; }
+$('#daySelect').addEventListener('change', renderNotesUI);
+$('#saveNotes').addEventListener('click', ()=>{
+  const d = $('#daySelect').value;
+  state.notes[d] = $('#dayNotes').value.slice(0,500);
+  persist(); $('#notesOk').classList.add('show'); setTimeout(()=>$('#notesOk').classList.remove('show'),1200);
+});
+$('#clearNotes').addEventListener('click', ()=>{
+  const d = $('#daySelect').value;
+  state.notes[d] = ''; persist(); renderNotesUI();
+});
+
+/* ======= المهارات ======= */
+function renderSkills(){
+  const box = $('#skillsList'); box.innerHTML='';
+  DEFAULT_SKILLS.forEach(s=>{
+    const wrap = document.createElement('div');
+    wrap.className='skill';
+    const left = document.createElement('div');
+    const strong = document.createElement('strong'); strong.textContent = s.title;
+    const meta = document.createElement('div'); meta.className='muted'; meta.textContent = s.area;
+    left.appendChild(strong); left.appendChild(meta);
+    const label = document.createElement('label'); label.className='row'; label.style.gap='6px';
+    const span  = document.createElement('span'); span.className='muted'; span.textContent='تم الإتقان';
+    const check = document.createElement('input'); check.type='checkbox'; check.dataset.skill=s.id; check.checked=!!state.skills[s.id];
+    check.addEventListener('change',()=>{
+      state.skills[s.id]=check.checked; persist(); updateSkillProgress();
+    });
+    label.appendChild(span); label.appendChild(check);
+    wrap.appendChild(left); wrap.appendChild(label); box.appendChild(wrap);
+  });
+  updateSkillProgress();
+}
+function updateSkillProgress(){
+  const total = DEFAULT_SKILLS.length;
+  const done  = DEFAULT_SKILLS.filter(s=> state.skills[s.id]).length;
+  const pct   = total? Math.round(done*100/total):0;
+  $('#skillPct').textContent = pct; $('#progressBar').style.width = pct+'%';
+}
+
+/* ======= الواجبات ======= */
+function renderAsg(){
+  const box = $('#asgList'); box.innerHTML='';
+  if(!state.asg.length){
+    const empty = document.createElement('div'); empty.className='tile';
+    empty.innerHTML = `<div class="ph">لا توجد واجبات</div><div class="body muted">أضف واجبًا من الأعلى.</div>`;
+    box.appendChild(empty); return;
+  }
+  state.asg.slice().sort((a,b)=> (a.done===b.done? (a.due-b.due) : (a.done?1:-1))).forEach(a=>{
+    const wrap = document.createElement('div'); wrap.className='tile';
+    const top = document.createElement('div'); top.className='ph';
+    if(a.link){ const link = document.createElement('a'); link.href=safeURL(a.link); link.target='_blank'; link.rel='noopener noreferrer'; link.textContent='رابط توضيحي'; top.appendChild(link); }
+    else { top.textContent='بدون رابط'; }
+    const body = document.createElement('div'); body.className='body';
+    const title = document.createElement('strong'); title.textContent=a.title;
+    const meta = document.createElement('div'); meta.className='meta';
+    const left = document.createElement('span'); left.textContent = 'التسليم: ' + (a.due? new Date(a.due).toLocaleDateString('ar-SA') : '—');
+    const right= document.createElement('span'); right.textContent = a.done?'✅ منجز':'⏳ جاري';
+    meta.appendChild(left); meta.appendChild(right);
+
+    const actions = document.createElement('div'); actions.className='row'; actions.style.justifyContent='space-between';
+    const btnDone = document.createElement('button'); btnDone.className='btn ok'; btnDone.textContent = a.done?'تراجع':'وضع منجز';
+    const btnGive = document.createElement('button'); btnGive.className='btn ghost'; btnGive.textContent = '+1 نقطة';
+    const btnDel  = document.createElement('button'); btnDel.className='btn danger'; btnDel.textContent = 'حذف';
+    btnDone.addEventListener('click',()=>{ a.done=!a.done; persist(); renderAsg(); });
+    btnGive.addEventListener('click',()=> addPoints(1));
+    btnDel .addEventListener('click',()=>{ state.asg = state.asg.filter(x=>x.id!==a.id); persist(); renderAsg(); });
+    actions.appendChild(btnDone); actions.appendChild(btnGive); actions.appendChild(btnDel);
+
+    body.appendChild(title); body.appendChild(meta); body.appendChild(actions);
+    wrap.appendChild(top); wrap.appendChild(body); box.appendChild(wrap);
+  });
+}
+$('#assignForm').addEventListener('submit',(e)=>{
+  e.preventDefault();
+  const title = $('#asgTitle').value.trim();
+  const dueVal= $('#asgDue').value;
+  const link  = $('#asgLink').value.trim();
+  const err   = $('#asgErr'); err.classList.remove('show'); err.textContent='';
+  if(title.length<3){ err.textContent='⚠️ عنوان الواجب قصير.'; err.classList.add('show'); return; }
+  if(link && !safeURL(link)){ err.textContent='⚠️ الرابط يجب أن يكون HTTPS صالحًا.'; err.classList.add('show'); return; }
+  const item = {id:uuidv4(), title, due: dueVal? new Date(dueVal).getTime(): null, link:safeURL(link), at:Date.now(), done:false};
+  state.asg.push(item); persist();
+  ['#asgTitle','#asgDue','#asgLink'].forEach(q=> $(q).value='');
+  renderAsg();
+});
+$('#clearAsg').addEventListener('click',()=>{
+  if(confirm('حذف جميع الواجبات؟')){ state.asg=[]; persist(); renderAsg(); }
+});
+
+/* ======= السلوك والمكافآت ======= */
+function renderPoints(){ $('#points').textContent = state.points; }
+function addPoints(n){ state.points = Math.max(0, state.points + n); persist(); renderPoints(); }
+$('#pPlus5').addEventListener('click',()=>addPoints(5));
+$('#pPlus1').addEventListener('click',()=>addPoints(1));
+$('#pMinus1').addEventListener('click',()=>addPoints(-1));
+$('#pReset').addEventListener('click',()=>{ if(confirm('تأكيد تصفير النقاط؟')){ state.points=0; persist(); renderPoints(); }});
+$('#redeemBtn').addEventListener('click',()=>{
+  const v = $('#rewardSel').value; if(!v) return;
+  const [name,costStr] = v.split('|'); const cost = Number(costStr||0);
+  if(state.points < cost){ alert('النقاط غير كافية.'); return; }
+  state.points -= cost; persist(); renderPoints();
+  $('#lastRedeem').textContent = `${name} – ${fmtDate(new Date())}`;
+});
+
+/* ======= التقارير/النسخ الاحتياطي/إعادة الضبط ======= */
+$('#genReport').addEventListener('click',()=>{
+  const month = $('#reportMonth').value.trim() || 'هذا الشهر (1447هـ)';
+  const skillsDone = DEFAULT_SKILLS.filter(s=> state.skills[s.id]).map(s=>'• '+s.title).join('\n');
+  const recentAsg  = state.asg.slice().sort((a,b)=>b.at-a.at).slice(0,5).map(a=>{
+    const due = a.due? new Date(a.due).toLocaleDateString('ar-SA'):'—';
+    return `• ${a.title} (التسليم: ${due}) ${a.done?'✅':''}`;
+  }).join('\n');
+  const txt =
+`تقرير الصف الأول 1447هـ
+الطالب: ${state.student.name || '—'}
+الشهر: ${month}
+
+النقاط الحالية: ${state.points}
+
+المهارات المتقنة (${DEFAULT_SKILLS.filter(s=> state.skills[s.id]).length}/${DEFAULT_SKILLS.length}):
+${skillsDone || '—'}
+
+أبرز الواجبات الأخيرة:
+${recentAsg || '—'}
+
+ملاحظات عامة:
+- تعزيز القراءة اليومية 10 دقائق.
+- تشجيع المشاركة في الأنشطة الجماعية.
+- مكافأة السلوك الإيجابي بنقاط.`;
+  $('#reportOut').textContent = txt;
+});
+$('#printBtn').addEventListener('click',()=>window.print());
+
+$('#exportBtn').addEventListener('click',()=>{
+  const name = (state.student.name || 'student').replace(/\s+/g,'-');
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download=`backup-grade1-1447-${name}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+});
+
+$('#importFile').addEventListener('change', async (e)=>{
+  const ok=$('#impOk'), err=$('#impErr'); ok.classList.remove('show'); err.classList.remove('show');
+  try{
+    const f=e.target.files?.[0]; if(!f) return;
+    const text = await f.text();
+    const data = JSON.parse(text);
+
+    // ✅ فحص شكل البيانات الأساسي
+    if(typeof data!=='object' || data===null) throw new Error('format');
+    if(!('student' in data) || !('points' in data) || !('asg' in data) || !('skills' in data))
+      throw new Error('missing');
+
+    // دمج آمن مع قيم افتراضية
+    state = Object.assign({student:{},skills:{},table:{},notes:{},asg:[],points:0}, data);
+    persist();
+    renderAll(); ok.classList.add('show');
+  }catch(ex){ console.error(ex); err.classList.add('show'); }
+  finally{ e.target.value=''; }
+});
+
+$('#factoryReset').addEventListener('click',()=>{
+  if(!confirm('سيتم حذف جميع البيانات المخزنة محليًا. متابعة؟')) return;
+  localStorage.removeItem(LS.student);
+  localStorage.removeItem(LS.skills);
+  localStorage.removeItem(LS.table);
+  localStorage.removeItem(LS.notes);
+  localStorage.removeItem(LS.asg);
+  localStorage.removeItem(LS.points);
+  state={student:{name:'',img:''},skills:{},table:{},notes:{},asg:[],points:0};
+  renderAll();
+});
+
+/* ======= تشغيل أولي ======= */
+function renderAll(){ renderStudent(); renderTable(); renderNotesUI(); renderSkills(); renderAsg(); renderPoints(); }
+loadAll(); renderAll();
+
+/* تحسين صغير: إخفاء التنبيهات عند النقر خارجها */
+document.addEventListener('click',(e)=>{
+  if(!e.target.closest('.alert')) document.querySelectorAll('.alert.show').forEach(x=>x.classList.remove('show'));
+});
+</script>
+</body>
+</html>
